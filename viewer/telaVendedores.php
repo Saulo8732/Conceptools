@@ -1,23 +1,60 @@
 <?php
 include_once '../cabecalho.php';
+include_once '../controller/VendedorController.php';
+$controler = new VendedorController();
+
+if(array_key_exists("from",$_POST )){
+
+    if(array_key_exists("aprovar", $_POST)){
+        $id = $_POST["aprovar"];
+        if($controler->isVendedorAtivo($id)){
+            if($controler->desativarVendedor($id)) {
+                echo "<p class='alert-success'>Vendedor desativado com sucesso!</p>";
+            } else{
+                echo "<p class='alert-warning'>O vendedor não foi desativado com sucesso.</p>";
+            }
+        }else{
+            if($controler->ativarVendedor($id)) {
+                echo "<p class='alert-success'>Vendedor ativado com sucesso!</p>";
+            } else{
+                echo "<p class='alert-warning'>O vendedor não foi ativado com sucesso.</p>";
+            }
+        }
+    }
+
+    else if(array_key_exists("deletar",$_POST )){
+        $id = $_POST["deletar"];
+        if($controler->deletarVendedor($id)) {
+            echo "<p class='alert-success'>Vendedor excluido com sucesso!</p>";
+        } else{
+            echo "<p class='alert-warning'>O vendedor não foi excluido com sucesso.</p>";
+        }
+
+
+    }
+
+    else if(array_key_exists("visualizar", $_POST)){
+        $id = $_POST["visualizar"];
+        header("Location: ../viewer/telaDetalhesVendedor.php?id=".$id."");
+        exit();
+    }
+
+    else if(array_key_exists("editar", $_POST)){
+        $id = $_POST["editar"];
+        var_dump($id);
+        header("Location: ../viewer/telaCadastroVendedor.php?id=".$id);
+        exit();
+    }
+}
 ?>
-<h2>Vendedores</h2>
-<div class="col-md-3">
+
+<div class="col-md-4">
+    <h2>Vendedores</h2>
     <form action="telaCadastroVendedor.php" method="post">
         <button class="btn btn-default btn-block" type="submit" id="btnCadastrarPedido"><strong>Novo vendedor</strong></button>
     </form>
-    <h4 class="text-uppercase text-center">Filtros </h4>
-    <form>
-        <div class="form-group"><strong>ID: </strong>
-            <input class="form-control" type="text" name="id"><strong>Nome: </strong>
-            <input class="form-control" type="text" name="nomerazao"><strong>CPF: </strong>
-            <input class="form-control" type="text" name="cpfcnpj"><strong>Telefone:</strong>
-            <input class="form-control" type="text" name="cpfcnpj">
-            <button class="btn btn-default btn-block" type="submit">Filtrar </button>
-        </div>
-    </form>
 </div>
-<div class="col-md-8 col-md-offset-0">
+<div class="col-md-12 col-md-offset-0">
     <div class="table-responsive">
         <table class="table table-striped table-bordered">
             <thead>
@@ -30,76 +67,7 @@ include_once '../cabecalho.php';
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>1 </td>
-                <td>Amaro Carvalho</td>
-                <td>671.658.175-81 </td>
-                <td>(81)9991-5345 </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td>2 </td>
-                <td>Alissom Santana</td>
-                <td>887.311.667-17 </td>
-                <td>(81)9936-4835 </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>(Sem vendedores)</td>
-                <td> </td>
-                <td> </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>(Sem vendedores) </td>
-                <td> </td>
-                <td> </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>(Sem vendedores)&nbsp; </td>
-                <td> </td>
-                <td> </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>(Sem vendedores)&nbsp; </td>
-                <td> </td>
-                <td> </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>(Sem vendedores)&nbsp; </td>
-                <td> </td>
-                <td> </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>(Sem vendedores)&nbsp; </td>
-                <td> </td>
-                <td> </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>(Sem vendedores)&nbsp; </td>
-                <td> </td>
-                <td> </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>(Sem vendedores)&nbsp; </td>
-                <td> </td>
-                <td> </td>
-                <td>Cell 5</td>
-            </tr>
+            <?php $controler->exibirVendedoresCadastrados();?>
             </tbody>
         </table>
     </div>

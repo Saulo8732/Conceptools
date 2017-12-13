@@ -1,29 +1,61 @@
 <?php
 include_once '../cabecalho.php';
+include_once '../controller/ClienteController.php';
+$controler = new ClienteController();
+
+if(array_key_exists("from",$_POST )){
+
+    if(array_key_exists("aprovar", $_POST)){
+        $id = $_POST["aprovar"];
+        if($controler->isClienteAtivo($id)){
+            if($controler->desativarCliente($id)) {
+                echo "<p class='alert-success'>Cliente desativado com sucesso!</p>";
+            } else{
+                echo "<p class='alert-warning'>O cliente não foi desativado com sucesso.</p>";
+            }
+        }else{
+            if($controler->ativarCliente($id)) {
+                echo "<p class='alert-success'>Cliente ativado com sucesso!</p>";
+            } else{
+                echo "<p class='alert-warning'>O cliente não foi ativado com sucesso.</p>";
+            }
+        }
+    }
+
+    else if(array_key_exists("deletar",$_POST )){
+        $id = $_POST["deletar"];
+        if($controler->deletarCliente($id)) {
+            echo "<p class='alert-success'>Cliente excluido com sucesso!</p>";
+        } else{
+            echo "<p class='alert-warning'>O cliente não foi excluido com sucesso.</p>";
+        }
+
+
+    }
+
+    else if(array_key_exists("visualizar", $_POST)){
+        $id = $_POST["visualizar"];
+        $tipo = $_POST["tipo"];
+        header("Location: ../viewer/telaDetalhes".$tipo.".php?id=".$id."");
+        exit();
+    }
+
+    else if(array_key_exists("editar", $_POST)){
+        $id = $_POST["editar"];
+        $tipo = $_POST["tipo"];
+        header("Location: ../viewer/telaCadastro".$tipo.".php?id=".$id);
+        exit();
+    }
+}
 ?>
-<h2>Clientes</h2>
-<div class="col-md-3">
+
+<div class="col-md-4">
+    <h2>Clientes</h2>
     <form action="telaTipoCliente.php">
         <button class="btn btn-default btn-block" type="submit"><strong>Novo cliente</strong></button>
     </form>
-    <h4 class="text-uppercase text-center">Filtros </h4>
-    <form>
-        <div class="form-group"><strong>ID: </strong>
-            <input class="form-control" type="text" name="id"><strong>Nome / Razão social: </strong>
-            <input class="form-control" type="text" name="nomerazao"><strong>CPF / CNPJ: </strong>
-            <input class="form-control" type="text" name="cpfcnpj"><strong>Tipo de cliente:</strong>
-            <select class="form-control" name="tipo">
-                <optgroup label="Selecione um tipo">
-                    <option value="ambos" selected="">Ambos</option>
-                    <option value="pessoafisica">Pessoa Física</option>
-                    <option value="pessoajuridica">Pessoa Jurídica</option>
-                </optgroup>
-            </select>
-            <button class="btn btn-default btn-block" type="submit">Filtrar </button>
-        </div>
-    </form>
 </div>
-<div class="col-md-8 col-md-offset-0">
+<div class="col-md-12 col-md-offset-0">
     <div class="table-responsive">
         <table class="table table-striped table-bordered">
             <thead>
@@ -36,76 +68,7 @@ include_once '../cabecalho.php';
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>1 </td>
-                <td>Alan da Silva</td>
-                <td>Pessoa Juridica</td>
-                <td>275.164.378-75 </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td>2 </td>
-                <td>Ana maria</td>
-                <td>Pessoa Física</td>
-                <td>23.341.957/0001-05 </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>(Sem clientes)</td>
-                <td> </td>
-                <td> </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>(Sem clientes)</td>
-                <td> </td>
-                <td> </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>(Sem clientes)</td>
-                <td> </td>
-                <td> </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>(Sem clientes)</td>
-                <td> </td>
-                <td> </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>(Sem clientes)</td>
-                <td> </td>
-                <td> </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>(Sem clientes)</td>
-                <td> </td>
-                <td> </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>(Sem clientes)</td>
-                <td> </td>
-                <td> </td>
-                <td>Cell 5</td>
-            </tr>
-            <tr>
-                <td> </td>
-                <td>(Sem clientes)</td>
-                <td> </td>
-                <td> </td>
-                <td>Cell 5</td>
-            </tr>
+            <?php $controler->exibirClientesCadastrados();?>
             </tbody>
         </table>
     </div>

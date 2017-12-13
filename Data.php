@@ -8,5 +8,6 @@
  */
 class Data
 {
-    public static $enderecoLocal = "D:\\xampp\\htdocs\\g2";
+    public static $enderecoLocal = "D:\\xampp\\htdocs\\Conceptools";
+
 }
